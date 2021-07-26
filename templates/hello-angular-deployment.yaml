@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "helloworldchart.fullname" . }}
+  name: {{ include "helloworldchart.fullname" . }}-ng
   labels:
-    {{- include "helloworldchart.labels" . | nindent 4 }}
+    {{- include "helloworldchart.labels" . | nindent 4 }}-ng
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "helloworldchart.selectorLabels" . | nindent 6 }}
+      {{- include "helloworldchart.selectorLabels" . | nindent 6 }}-ng
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "helloworldchart.selectorLabels" . | nindent 8 }}
+        {{- include "helloworldchart.selectorLabels" . | nindent 8 }}-ng
       name: helloworld
     spec:
       {{- with .Values.imagePullSecrets }}
@@ -29,26 +29,24 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Values.image.name }}
+        - name: {{ .Values.angular.image.name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.image }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.angular.image.image }}"
+          imagePullPolicy: {{ .Values.angular.image.pullPolicy }}
           ports:
-           - containerPort: {{ .Values.service.internalport }}
+           - containerPort: {{ .Values.angular.service.internalport }}
           env:
-            - name: FRONTEND_BASEURIS_0
-              value: {{ .Values.frontEnd_baseUris_0}}
-            - name: FRONTEND_BASEURIS_1
-              value: {{ .Values.frontEnd_baseUris_1 }}
+            - name: API_URL
+              value: {{ .Values.backApiUri }}
           livenessProbe:
             httpGet:
-              path: /hello/version
-              port: {{ .Values.service.internalport }}
+              path: /
+              port: {{ .Values.angular.service.internalport }}
           readinessProbe:
             httpGet:
-              path: /hello/version
-              port: {{ .Values.service.internalport }}
+              path: /
+              port: {{ .Values.angular.service.internalport }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

@@ -12,6 +12,20 @@ image:
   image: local/helloworld-sb-image
   name: helloworld
 
+angular:
+  image:
+    repository: nginx
+    pullPolicy: Never
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+    image: local/helloworld-ng-image
+    name: helloworld-ng
+  service:
+    type: ClusterIP
+    externalport: 8080
+    internalport: 8080
+    name: helloworld-ng
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -43,6 +57,7 @@ service:
   externalport: 2200
   internalport: 2200
   name: helloworld
+
 
 ingress:
   enabled: false
@@ -87,3 +102,5 @@ affinity: {}
 
 frontEnd_baseUris_0: "http://localhost:8080"
 frontEnd_baseUris_1: "http://localhost:4200"
+
+backApiUri: "http://localhost:2200/"
