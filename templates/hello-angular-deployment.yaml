@@ -19,6 +19,7 @@ spec:
       {{- end }}
       labels:
         {{- include "helloworldchart.selectorLabels" . | nindent 8 }}
+      name: helloworld
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -28,14 +29,18 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ .Values.image.name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.name }}"
+          image: "{{ .Values.image.image }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: {{ .Values.service.name }}
-              containerPort: {{ .Values.service.internalport }}
+           - containerPort: {{ .Values.service.internalport }}
+          env:
+            - name: FRONTEND_BASEURIS_0
+              value: {{ .Values.frontEnd_baseUris_0}}
+            - name: FRONTEND_BASEURIS_1
+              value: {{ .Values.frontEnd_baseUris_1 }}
           livenessProbe:
             httpGet:
               path: /hello/version

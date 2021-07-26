@@ -6,10 +6,11 @@ replicaCount: 1
 
 image:
   repository: nginx
-  pullPolicy: IfNotPresent
+  pullPolicy: Never
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
-  name: helloworld-sb-image
+  image: local/helloworld-sb-image
+  name: helloworld
 
 imagePullSecrets: []
 nameOverride: ""
@@ -83,3 +84,6 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+frontEnd_baseUris_0: "http://localhost:8080"
+frontEnd_baseUris_1: "http://localhost:4200"

@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helloworldchart.fullname" . }}
+  labels:
+    {{- include "helloworldchart.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "helloworldchart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "helloworldchart.selectorLabels" . | nindent 8 }}
+      name: helloworld
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "helloworldchart.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Values.image.name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.image }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+           - containerPort: {{ .Values.service.internalport }}
+          env:
+            - name: FRONTEND_BASEURIS_0
+              value: {{ .Values.frontEnd_baseUris_0}}
+            - name: FRONTEND_BASEURIS_1
+              value: {{ .Values.frontEnd_baseUris_1 }}
+          livenessProbe:
+            httpGet:
+              path: /hello/version
+              port: {{ .Values.service.internalport }}
+          readinessProbe:
+            httpGet:
+              path: /hello/version
+              port: {{ .Values.service.internalport }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
