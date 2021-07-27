@@ -13,6 +13,7 @@ image:
   name: helloworld
 
 angular:
+  labelprefix: -ng
   image:
     repository: nginx
     pullPolicy: Never
@@ -23,7 +24,7 @@ angular:
   service:
     type: ClusterIP
     externalport: 8080
-    internalport: 8080
+    internalport: 80
     name: helloworld-ng
 
 imagePullSecrets: []
