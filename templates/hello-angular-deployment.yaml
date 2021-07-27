@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "helloworldchart.fullname" . }}-ng
+  name: {{ include "helloworldangular.fullname" . }}
   labels:
-    {{- include "helloworldchart.labels" . | nindent 4 }}-ng
+    {{- include "helloworldangular.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "helloworldchart.selectorLabels" . | nindent 6 }}-ng
+      {{- include "helloworldangular.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "helloworldchart.selectorLabels" . | nindent 8 }}-ng
+        {{- include "helloworldangular.selectorLabels" . | nindent 8 }}
       name: helloworld
     spec:
       {{- with .Values.imagePullSecrets }}

@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "helloworldchart.fullname" . }}-ng
+  name: {{ include "helloworldangular.fullname" . }}
   labels:
-    {{- include "helloworldchart.labels" . | nindent 4 }}-ng
+    {{- include "helloworldangular.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -12,4 +12,4 @@ spec:
       protocol: TCP
       name: {{ .Values.angular.service.name }}
   selector:
-    {{- include "helloworldchart.selectorLabels" . | nindent 4 }}-ng
+    {{- include "helloworldangular.selectorLabels" . | nindent 4 }}

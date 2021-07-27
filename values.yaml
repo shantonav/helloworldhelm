@@ -13,7 +13,7 @@ image:
   name: helloworld
 
 angular:
-  labelprefix: -ng
+  labelprefix: ng
   image:
     repository: nginx
     pullPolicy: Never

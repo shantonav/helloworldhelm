@@ -60,3 +60,54 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+
+{{/*
+Create the name of the deployment for angular service
+*/}}
+{{- define "helloworldangular.fullname" -}}
+{{- $name := default .Chart.Name .Values.angular.labelprefix }}
+{{- if contains $name .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+{{- end }}
+
+
+{{/*
+Angular app labels
+*/}}
+{{- define "helloworldangular.labels" -}}
+helm.sh/chart: {{ include "helloworldangular.chart" . }}
+{{ include "helloworldangular.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+
+{{/*
+Create chart name and version for angular app as used by the chart label.
+*/}}
+{{- define "helloworldangular.chart" -}}
+{{- printf "%s-%s-%s" .Chart.Name .Values.angular.labelprefix .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+
+{{/*
+Selector labels fopr angular app
+*/}}
+{{- define "helloworldangular.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "helloworldangular.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
+{{/*
+Expand the name of the angular chart.
+*/}}
+{{- define "helloworldangular.name" -}}
+{{- default .Chart.Name .Values.angular.labelprefix | trunc 63 | trimSuffix "-" }}
+{{- end }}
